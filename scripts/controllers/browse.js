@@ -124,5 +124,12 @@ function BrowseController($scope,
       });
   }
 
+  $scope.acceptOffer = function (offerId, runnerId) {
+    Offer.acceptOffer($scope.selectedTask.$id, offerId, runnerId)
+      .then(function() {
+        toaster.pop('success', "offer is accepted");
+      });
+  }
+
 
 }

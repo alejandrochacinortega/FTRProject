@@ -7,14 +7,16 @@ Offer.$inject = [
   '$firebaseArray',
   'FURL',
   '$q',
-  'Auth'];
+  'Auth',
+  'Task'];
 
 /* @ngInject */
 function Offer($firebaseObject,
                $firebaseArray,
                FURL,
                $q,
-               Auth) {
+               Auth,
+               Task) {
 
   var ref     = new Firebase(FURL);
   var user    = Auth.user;
@@ -24,7 +26,8 @@ function Offer($firebaseObject,
     isOffered  : isOffered,
     isMaker    : isMaker,
     getOffer   : getOffer,
-    cancelOffer: cancelOffer
+    cancelOffer: cancelOffer,
+    acceptOffer: acceptOffer
   };
 
   return service;
@@ -71,6 +74,29 @@ function Offer($firebaseObject,
 
   function cancelOffer(taskId, offerId) {
     return getOffer(taskId, offerId).$remove();
+  }
+
+  function acceptOffer(taskId, offerId, runnerId) {
+    var d = $q.defer();
+    var o = getOffer(taskId, offerId);
+    ref.child('offers').child(taskId).child(offerId).update({
+      accepted: true
+    }, function (error) {
+      if (error) {
+        console.log('error ', error);
+        d.reject(error)
+      }
+      else {
+        /*var t = Task.getTask(taskId);*/
+        ref.child('tasks').child(taskId).update({
+          status: "assigned",
+          runner: runnerId
+        });
+        d.resolve();
+      }
+    })
+
+    return d.promise;
   }
 
 
