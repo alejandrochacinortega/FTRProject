@@ -85,6 +85,12 @@
                                 </button>
                             </div>
 
+                            <div ng-show="isAssigned(selectedTask) && !isCompleted(selectedTask)">
+                                <button class="btn btn-danger btn-sm" ng-click="completeTask(selectedTask.$id)">
+                                    Complete
+                                </button>
+                            </div>
+
                         </div>
                     </div>
                 </div>

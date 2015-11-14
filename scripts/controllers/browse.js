@@ -67,7 +67,8 @@ function BrowseController($scope,
       $scope.isOpen = Task.isOpen;
       $scope.isOfferMaker = Offer.isMaker;
 
-      console.log('isOfferedMaker ', Offer.isMaker);
+      $scope.isAssigned = Task.isAssigned;
+      $scope.isCompleted = Task.isCompleted;
     }
 
     $scope.comments = Comment.comments(task.$id);
@@ -122,12 +123,19 @@ function BrowseController($scope,
         $scope.alreadyOffered = false;
         $scope.block = false;
       });
-  }
+  };
 
   $scope.acceptOffer = function (offerId, runnerId) {
     Offer.acceptOffer($scope.selectedTask.$id, offerId, runnerId)
       .then(function() {
         toaster.pop('success', "offer is accepted");
+      });
+  };
+
+  $scope.completeTask= function (taskId) {
+    Task.completeTask(taskId)
+      .then(function() {
+        toaster.pop('success', "Congratulations! you have ocmpleted this task");
       });
   }
 

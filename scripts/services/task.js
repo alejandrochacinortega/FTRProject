@@ -66,6 +66,33 @@ function Task(FURL, $firebaseArray, $firebaseObject, Auth, $q) {
 
     isOpen: function (task) {
       return task.status === "open";
+    },
+
+    completeTask: function (taskId) {
+      var d = $q.defer();
+      /*var t = this.getTask(taskId);*/
+      var t = ref.child('tasks').child(taskId);
+
+      t.update({
+        status: "completed"
+      }, function (error) {
+        if (error) {
+          d.reject(error)
+        }
+        else {
+          d.resolve()
+        }
+      });
+
+      return d.promise;
+    },
+
+    isAssigned: function (task) {
+      return (user && user.uid == task.runner)
+    },
+
+    isCompleted: function (task) {
+      return task.status == "completed";
     }
   };
 
